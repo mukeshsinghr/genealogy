@@ -330,6 +330,12 @@ module Genealogy
       def females
         where(sex: sex_female_value)
       end
+
+      # all Unknown individuals
+      # @return [ActiveRecord::Relation]
+      def unknowns
+        where(sex: sex_unknown_value)
+      end
       # all individuals individuals having relative with specified role
       # @return [ActiveRecord, ActiveRecord::Relation]
       def all_with(role)

@@ -78,11 +78,12 @@ module Genealogy
       end
 
       ## sex
-      class_attribute :sex_values, :sex_male_value, :sex_female_value, instance_accessor: false
+      class_attribute :sex_values, :sex_male_value, :sex_female_value, :sex_unknown_value, instance_accessor: false
       self.sex_values = options[:sex_values] || DEFAULTS[:sex_values]
       self.sex_male_value = self.sex_values.first
       self.sex_female_value = self.sex_values.last
-
+      self.sex_unknown_value= self.sex_values[1]
+      
       # validation
       validates_presence_of :sex
       validates_format_of :sex, with: /[#{sex_values.join}]/

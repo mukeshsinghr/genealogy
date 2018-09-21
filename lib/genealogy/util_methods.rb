@@ -111,6 +111,8 @@ module Genealogy
         :male
       when gclass.sex_female_value
         :female
+      when gclass.sex_unknown_value
+        :unknown
       else
         raise SexError, "Sex value not valid for #{self}"
       end
@@ -161,9 +163,10 @@ module Genealogy
         next if relative.nil?
         check_indiv(relative)
         if gclass.ineligibility_level >= PEDIGREE
+          byebug
           if ineligibles = self.send("ineligible_#{relationship.to_s.pluralize}")
             # puts "[#{__method__}]: checking if #{relative} can be #{relationship} of #{self}"
-            raise IncompatibleRelationshipException, "#{relative} can't be #{relationship} of #{self}" if ineligibles.include? relative
+            raise IncompatibleRelationshipException, "#{relative.first_name} can't be #{relationship} of #{self.first_name}" if ineligibles.include? relative
           else
             raise IncompatibleRelationshipException, "#{self} already has #{relationship}"
           end
@@ -188,7 +191,8 @@ module Genealogy
 
         # sex
         if array = options[:sex_values]
-          raise ArgumentError, ":sex_values option must be an array of length 2: [:male_value, :female_value]" unless array.is_a?(Array) and array.size == 2
+          raise ArgumentError, ":sex_values option must be an array of length 3: [:male_value, :unknown, :female_value]" unless array.is_a?(Array) and (array.size == 3 || array.size == 2)
+          #          raise ArgumentError, ":sex_values option must be an array of length 3: [:male_value, :female_value]" unless array.is_a?(Array) and array.size == 2
         end
 
         # booleans
